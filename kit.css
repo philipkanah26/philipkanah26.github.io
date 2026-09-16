@@ -1,0 +1,150 @@
+/* ============================================================
+   Kanah Buyer Mock — the UI Elements kit, namespaced.
+   Source: the UI Elements folder, one Uiverse component stylesheet per subfolder, recolored to the brand on 14 Sep 2026.
+   Every selector starts with .kit- and every keyframe with kit- so nothing collides with the app.
+   Tokens come from styles.css (:root). Sizes are adapted to the app; behaviour is the original.
+   ============================================================ */
+
+/* From Uiverse.io by gharsh11032000 — recolored to the Kanah brand. CTA / login button.
+   The original expanding circle is dropped: it was clipped at the pill and left a sliver of the resting colour on the curve.
+   Hover keeps the radius and changes the fill, and the arrows still cross the button. */
+.kit-cta{position:relative;display:inline-flex;align-items:center;gap:4px;padding:17px 36px;border:0;font-family:var(--font-sans);font-size:15px;background:var(--forest);border-radius:100px;font-weight:600;color:var(--ivory);box-shadow:var(--sh1);cursor:pointer;overflow:hidden;transition:all .6s cubic-bezier(.23,1,.32,1);white-space:nowrap;text-decoration:none}
+.kit-cta svg{position:absolute;width:22px;fill:var(--ivory);z-index:9;transition:all .8s cubic-bezier(.23,1,.32,1)}
+.kit-cta .arr-1{right:20px}
+.kit-cta .arr-2{left:-25%}
+.kit-cta .text{position:relative;z-index:1;transform:translateX(-12px);transition:all .8s cubic-bezier(.23,1,.32,1)}
+.kit-cta:hover,.kit-cta.is-on{box-shadow:var(--sh2);background:var(--sage);color:var(--forest)}
+.kit-cta:hover .arr-1,.kit-cta.is-on .arr-1{right:-25%}
+.kit-cta:hover .arr-2,.kit-cta.is-on .arr-2{left:20px}
+.kit-cta:hover .text,.kit-cta.is-on .text{transform:translateX(12px)}
+.kit-cta:hover svg,.kit-cta.is-on svg{fill:var(--forest)}
+.kit-cta:focus-visible{outline:0;box-shadow:0 0 0 4px var(--sage-ring)}
+.kit-cta:active{scale:.96}
+.kit-cta.block{width:100%;justify-content:center}
+
+/* From Uiverse.io by Codecite — recolored to the Kanah brand. Submit button; the gradient runs Forest into the Forest–Sage blend. */
+.kit-submit{border:0;border-radius:50px;height:48px;padding:0 28px;font-family:var(--font-sans);font-size:15px;font-weight:600;color:var(--ivory);background-image:linear-gradient(135deg,var(--forest) 0%,var(--forest-sage) 100%);box-shadow:0 16px 26px -8px rgba(10,41,0,.4);cursor:pointer;transition:all .3s ease-in-out;white-space:nowrap}
+.kit-submit:hover{transform:translateY(3px);box-shadow:none}
+.kit-submit:focus-visible{outline:0;box-shadow:0 0 0 4px var(--sage-ring)}
+.kit-submit:active{opacity:.6}
+.kit-submit.small{height:40px;padding:0 20px;font-size:14px}
+
+/* From Uiverse.io by mrhyddenn — recolored to the Kanah brand. Completion checkbox, wrapped as a task row. */
+.kit-task{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:12px 14px;border:0;box-shadow:var(--sh0);border-radius:10px;background:var(--paper);position:relative;transition:background .25s var(--ease),opacity .4s var(--ease),transform .4s var(--ease)}
+.kit-task:hover{background:var(--sage-wash)}
+.kit-task.done{opacity:.6}
+.kit-task .body{display:block;width:100%;text-align:left;border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer}
+.kit-task .body b{display:block;font-weight:600;font-size:14px}
+.kit-task .body small{display:block;color:var(--stone);font-size:12.5px}
+.kit-task .body:focus-visible{outline:0;box-shadow:0 0 0 3px var(--sage-ring);border-radius:6px}
+.kit-cbx{position:absolute;opacity:0;width:0;height:0}
+.kit-check{position:relative;width:18px;height:18px;margin-top:2px;display:block;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.kit-check:before{content:"";position:absolute;top:-15px;left:-15px;width:48px;height:48px;border-radius:50%;background:var(--sage-wash);opacity:0;transition:opacity .2s ease}
+.kit-check svg{position:relative;z-index:1;width:18px;height:18px;fill:none;stroke:var(--line);stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transition:all .2s ease}
+.kit-check svg path{stroke-dasharray:60;stroke-dashoffset:0}
+.kit-check svg polyline{stroke-dasharray:22;stroke-dashoffset:66}
+.kit-task:hover .kit-check:before{opacity:1}
+.kit-task:hover .kit-check svg{stroke:var(--forest)}
+.kit-cbx:checked+.kit-check svg{stroke:var(--forest)}
+.kit-cbx:checked+.kit-check svg path{stroke-dashoffset:60;transition:all .3s linear}
+.kit-cbx:checked+.kit-check svg polyline{stroke-dashoffset:42;transition:all .2s linear;transition-delay:.15s}
+.kit-cbx:focus-visible+.kit-check:before{opacity:1;box-shadow:0 0 0 3px var(--sage-ring)}
+.kit-cbx:disabled+.kit-check{cursor:default}
+
+/* From Uiverse.io by gagan-gv — recolored to the Kanah brand. Selector; Forest fill with a Sage halo when chosen. */
+.kit-radio{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 14px;border:0;box-shadow:var(--sh0);border-radius:10px;background:var(--paper);cursor:pointer;transition:background .3s var(--ease),box-shadow .3s var(--ease);position:relative}
+.kit-radio input{position:absolute;opacity:0;width:0;height:0}
+.kit-radio .rmark{position:relative;width:20px;height:20px;border-radius:50%;background:var(--line);transition:all .5s;margin-top:1px;flex:0 0 20px}
+.kit-radio .rmark::after{content:"";position:absolute;display:none;left:7px;top:4px;width:4px;height:8px;border:solid var(--ivory);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.kit-radio input:checked~.rmark{background:var(--forest);box-shadow:0 0 0 5px var(--sage-ring)}
+.kit-radio input:checked~.rmark::after{display:block}
+.kit-radio:has(input:checked){background:var(--sage-wash);box-shadow:0 0 0 2px var(--sage)}
+.kit-radio input:focus-visible~.rmark{box-shadow:0 0 0 4px var(--sage-ring)}
+.kit-radio b{display:block;font-size:14px}
+.kit-radio small{display:block;color:var(--stone);font-size:12.5px}
+.kit-radio .disc{display:block;font-size:12px;color:var(--stone);margin-top:4px}
+.kit-radio img{width:36px;height:36px;border-radius:50%;object-fit:cover;flex:0 0 36px}
+
+/* From Uiverse.io by cuzpq — recolored to the Kanah brand. Switch; the track slides between Sage and Forest. */
+.kit-switch{appearance:none;-webkit-appearance:none;width:54px;height:28px;border-radius:99em;background:linear-gradient(to right,var(--sage) 50%,var(--forest) 50%) no-repeat;background-size:205%;background-position:0;transition:.4s;position:relative;cursor:pointer;box-shadow:var(--sh1);flex:0 0 54px;margin:0}
+.kit-switch::before{content:"";width:20px;height:20px;position:absolute;top:4px;left:4px;background:linear-gradient(to right,var(--sage) 50%,var(--forest) 50%) no-repeat;background-size:205%;background-position:100%;border-radius:50%;transition:.4s}
+.kit-switch:checked{background-position:100%}
+.kit-switch:checked::before{left:calc(100% - 24px);background-position:0}
+.kit-switch:focus-visible{outline:0;box-shadow:0 0 0 4px var(--sage-ring)}
+
+/* From Uiverse.io by satyamchaudharydev — recolored to the Kanah brand. Horizontal loader; the bar gradiates Forest into Sage. */
+.kit-loader{display:block;width:130px;height:4px;border-radius:30px;background:var(--forest-wash);position:relative;overflow:hidden}
+.kit-loader::before{content:"";position:absolute;background:linear-gradient(90deg,var(--forest) 0%,var(--sage) 100%);top:0;left:0;width:0;height:100%;border-radius:30px;animation:kit-moving 1s ease-in-out infinite}
+.kit-loader.wide{width:100%}
+@keyframes kit-moving{50%{width:100%}100%{width:0;right:0;left:unset}}
+
+/* From Uiverse.io by bedirhan-arslan — recolored to the Kanah brand. Card input; filled by default, Sage ring on focus. */
+.kit-field{position:relative;padding-top:18px}
+.kit-field input{width:100%;padding:10px 14px;outline:0;border:0;border-radius:8px;background:var(--forest-wash);color:var(--ink);font-family:var(--font-sans);font-size:15px;font-weight:550;transition:.3s ease-in-out;box-shadow:0 0 0 5px transparent}
+.kit-field input:hover{box-shadow:0 0 0 1px var(--line)}
+.kit-field input:focus{background:var(--ivory);box-shadow:0 0 0 3px var(--sage-ring)}
+.kit-field span{position:absolute;left:0;top:18px;padding:10px 14px;color:var(--stone);font-size:15px;font-weight:600;transition:.3s ease-in-out;pointer-events:none}
+.kit-field input:focus+span,.kit-field input:valid+span{transform:translateY(-32px) translateX(-6px) scale(.85);color:var(--forest)}
+
+/* From Uiverse.io by opMorn — recolored to the Kanah brand. Underline input; the label lifts to Forest and the underline draws. */
+.kit-line{position:relative;padding-top:18px}
+.kit-line input{width:100%;border:0;border-bottom:2px solid var(--line);padding:6px 0;background:transparent;color:var(--ink);font-family:var(--font-sans);font-size:20px;outline:0}
+.kit-line input.code{font-size:22px;letter-spacing:.14em}
+.kit-line .lbl{position:absolute;top:24px;left:0;color:var(--stone);transition:all .3s ease;pointer-events:none;font-size:16px}
+.kit-line input:focus~.lbl,.kit-line input:valid~.lbl{top:0;font-size:13px;color:var(--forest)}
+.kit-line .ul{position:absolute;bottom:0;left:0;height:2px;width:100%;background:var(--forest);transform:scaleX(0);transform-origin:left;transition:all .3s ease}
+.kit-line input:focus~.ul,.kit-line input:valid~.ul{transform:scaleX(1)}
+.kit-line.error input{border-bottom-color:var(--attn)}
+.kit-line.error .lbl{color:var(--attn)}
+
+/* From Uiverse.io by nazar-gavrylyk — recolored to the Kanah brand. Download and open; Sage pill, Forest circle, progress fills in Sage. */
+.kit-dl{background:transparent;border:2px solid var(--sage);display:flex;align-items:center;border-radius:50px;width:160px;cursor:pointer;transition:all .4s ease;padding:5px;position:relative;font-family:var(--font-sans)}
+.kit-dl::before{content:"";position:absolute;inset:0;background:var(--forest);width:8px;height:8px;transition:all .4s ease;border-radius:100%;margin:auto;opacity:0;visibility:hidden}
+.kit-dl .input{display:none}
+.kit-dl .title{font-size:15px;color:var(--forest);font-weight:600;transition:all .4s ease;position:absolute;right:18px;bottom:14px;text-align:center}
+.kit-dl .title:last-child{opacity:0;visibility:hidden}
+.kit-dl .circle{height:42px;width:42px;border-radius:50%;background:var(--forest);display:flex;justify-content:center;align-items:center;transition:all .4s ease;position:relative;box-shadow:0 0 0 0 var(--sage-ring);overflow:hidden}
+.kit-dl .circle .icon{width:22px;height:22px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:all .4s ease;stroke:var(--ivory);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.kit-dl .circle .square{aspect-ratio:1;width:14px;border-radius:2px;background:var(--forest);opacity:0;visibility:hidden;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transition:all .4s ease}
+.kit-dl .circle::before{content:"";position:absolute;left:0;top:0;background:var(--sage);width:100%;height:0;transition:all .4s ease}
+.kit-dl:has(.input:checked){width:54px;animation:kit-installed .4s ease 3.5s forwards}
+.kit-dl:has(.input:checked)::before{animation:kit-rotate 3s ease-in-out .4s forwards}
+.kit-dl .input:checked+.circle{animation:kit-pulse 1s forwards,kit-circleDelete .2s ease 3.5s forwards;rotate:180deg}
+.kit-dl .input:checked+.circle::before{animation:kit-installing 3s ease-in-out forwards}
+.kit-dl .input:checked+.circle .icon{opacity:0;visibility:hidden}
+.kit-dl .input:checked~.circle .square{opacity:1;visibility:visible}
+.kit-dl .input:checked~.title{opacity:0;visibility:hidden}
+.kit-dl .input:checked~.title:last-child{animation:kit-showInstalled .4s ease 3.5s forwards}
+@keyframes kit-pulse{0%{scale:.95;box-shadow:0 0 0 0 var(--sage-ring)}70%{scale:1;box-shadow:0 0 0 16px rgba(191,227,163,0)}100%{scale:.95;box-shadow:0 0 0 0 rgba(191,227,163,0)}}
+@keyframes kit-installing{from{height:0}to{height:100%}}
+@keyframes kit-rotate{0%{transform:rotate(-90deg) translate(27px) rotate(0);opacity:1;visibility:visible}99%{transform:rotate(270deg) translate(27px) rotate(270deg);opacity:1;visibility:visible}100%{opacity:0;visibility:hidden}}
+@keyframes kit-installed{100%{width:150px;border-color:var(--forest)}}
+@keyframes kit-circleDelete{100%{opacity:0;visibility:hidden}}
+@keyframes kit-showInstalled{100%{opacity:1;visibility:visible;right:56px}}
+
+/* From Uiverse.io by nazar-gavrylyk — recolored to the Kanah brand. Option menu on the Ivory surface; hover and selected states are Sage. */
+.kit-menu{width:200px;background:var(--ivory);border-radius:12px;box-shadow:var(--sh2);padding:12px 0;display:flex;flex-direction:column;gap:8px;font-family:var(--font-sans);border:1px solid var(--line)}
+.kit-menu .sep{border-top:1px solid var(--line)}
+.kit-menu ul{list-style:none;display:flex;flex-direction:column;gap:6px;padding:0 10px;margin:0}
+.kit-menu li{display:flex;align-items:center;color:var(--ink);gap:10px;transition:all .3s ease-out;padding:6px 8px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600}
+.kit-menu li svg{width:18px;height:18px;stroke:var(--stone);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:all .3s ease-out;flex:0 0 18px}
+.kit-menu li:hover{background:var(--sage-wash);color:var(--forest);transform:translate(1px,-1px)}
+.kit-menu li:hover svg{stroke:var(--forest)}
+.kit-menu li:active{transform:scale(.99)}
+.kit-menu ul:last-child li{color:var(--clay)}
+.kit-menu ul:last-child li svg{stroke:var(--clay)}
+.kit-menu ul:last-child li:hover{background:var(--clay-wash)}
+.kit-menu li p{margin:0}
+
+/* From Uiverse.io by Yaya12085 — recolored to the Kanah brand. Browse and upload; Ivory card, Sage wash dropzone, Forest glyphs. */
+.kit-upload{width:100%;max-width:360px;border-radius:12px;box-shadow:var(--sh1);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px;gap:6px;background:var(--ivory);font-family:var(--font-sans)}
+.kit-upload .header{width:100%;min-height:150px;border:2px dashed rgba(10,41,0,.28);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--sage-wash);gap:6px;transition:background .3s var(--ease)}
+.kit-upload .header:hover{background:var(--sage-ring)}
+.kit-upload .header svg{height:52px;width:52px;stroke:var(--forest);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.kit-upload .header p{text-align:center;color:var(--ink);font-size:13.5px;max-width:24ch;margin:0}
+.kit-upload .footer{background:var(--forest-wash);width:100%;height:40px;padding:8px 10px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;color:var(--stone);font-size:13px;transition:background .2s ease}
+.kit-upload .footer:hover{background:var(--sage-wash)}
+.kit-upload .footer svg{width:20px;height:20px;stroke:var(--forest);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.kit-upload .footer p{margin:0;flex:1;text-align:center}
+.kit-upload input{display:none}
+.kit-upload .footer:focus-within{box-shadow:0 0 0 3px var(--sage-ring)}
