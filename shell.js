@@ -6,7 +6,7 @@ const Shell = (() => {
   let pendingQuestion = null;
   let sheet = null;
   let unlockedFlag = false;
-  let loaderTimer = null, toastTimer = null, pop = null;
+  let loaderTimer = null, toastTimer = null, pop = null, lastKey = null;
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c]));
 
   const ICONS = {
@@ -172,11 +172,16 @@ const Shell = (() => {
   /* ---------- DOM side ---------- */
   const $ = id => (typeof document !== 'undefined' ? document.getElementById(id) : null);
   const prefersReduced = () => !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) || document.documentElement.classList.contains('still');
+  /* A route is the mode, the view and the stage. Only a route change moves the page (a view transition, or the .enter rise without one);
+     overlays, answers and the inspector choice re-render in place so their own motion is the only motion. Spec §4.6. */
+  function routeKey(st, out) { return out.mode + '|' + (out.mode === 'workspace' ? viewString(st) : '') + '|' + st.cur; }
   function render() {
     const st = parse(location.hash);
     if (st.still) document.documentElement.classList.add('still');
     if (!st.doc && st.view) lastView = st.view;
     const out = compose(location.hash);
+    const key = routeKey(st, out); const routeChanged = key !== lastKey; const first = lastKey === null; lastKey = key;
+    const useVT = routeChanged && !first && !!document.startViewTransition && !prefersReduced() && !navigator.webdriver;
     const paint = () => {
       closePop();
       $('lock').hidden = out.mode !== 'lock'; $('lock').innerHTML = out.lock || '';
@@ -185,18 +190,22 @@ const Shell = (() => {
       $('side').innerHTML = out.side; $('main').innerHTML = out.main; $('rail').innerHTML = out.rail;
       $('body').classList.toggle('norail', !out.rail);
       const v = $('viewer'); const wasHidden = v.hidden;
-      if (out.viewer) { v.innerHTML = out.viewer; if (wasHidden) { v.hidden = false; requestAnimationFrame(() => requestAnimationFrame(() => v.classList.add('in'))); } }
-      else if (!wasHidden) { v.classList.remove('in'); setTimeout(() => { if (!v.classList.contains('in')) { v.hidden = true; v.innerHTML = ''; } }, 320); }
+      if (out.viewer) { v.innerHTML = out.viewer; v.classList.remove('out'); v.hidden = false; }
+      else if (!wasHidden) { v.classList.add('out'); setTimeout(() => { if (v.classList.contains('out')) { v.hidden = true; v.innerHTML = ''; v.classList.remove('out'); } }, 200); }
       $('demo').hidden = !out.demo; $('demo').innerHTML = out.demo;
       document.title = 'Kanah · ' + (out.mode === 'lock' ? 'Sign in' : Engine.stage(st.cur).label);
-      afterPaint(st, out);
+      afterPaint(st, out, routeChanged && !useVT);
     };
-    if (document.startViewTransition && !prefersReduced() && !navigator.webdriver) document.startViewTransition(paint); else paint();
+    if (!useVT) { paint(); return; }
+    // A transition that never reaches its update (a hidden tab, headless rendering) is skipped after 300ms so the page always paints.
+    const t = document.startViewTransition(paint); let updated = false; t.updateCallbackDone.then(() => { updated = true; }, () => { updated = true; });
+    setTimeout(() => { if (!updated) t.skipTransition(); }, 300);
   }
-  function afterPaint(st, out) {
-    const main = $('main'); main.classList.remove('enter'); void main.offsetWidth; main.classList.add('enter');
-    const fp = ($('onboard').querySelector('.formpane') || $('lock').querySelector('.formpane')); if (fp) fp.classList.add('enter');
+  function afterPaint(st, out, rise) {
+    const main = $('main');
     const ans = main.querySelector('.answer'); if (ans && !prefersReduced()) { ans.classList.add('pending'); setTimeout(() => ans.classList.remove('pending'), 600); }
+    main.classList.remove('enter');
+    if (rise) { void main.offsetWidth; main.classList.add('enter'); const fp = ($('onboard').querySelector('.formpane') || $('lock').querySelector('.formpane')); if (fp) fp.classList.add('enter'); }
     if (!st.doc && out.mode === 'workspace' && !sheet) window.scrollTo(0, 0);
     if (out.mode === 'lock' && !st.bad) { const u = $('lock').querySelector('#lock-user'); if (u) u.focus(); }
   }
@@ -223,7 +232,7 @@ const Shell = (() => {
   }
   function openDoc(id) { const st = parse(location.hash); lastView = viewString(st); sheet = null; setHash('doc/' + id, st.hashStage); }
   function closeViewer() { const st = parse(location.hash); setHash(lastView, st.hashStage); }
-  function toast(text) { const t = $('toast'); if (!t) return; t.textContent = text; t.hidden = false; requestAnimationFrame(() => t.classList.add('in')); clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.classList.remove('in'); setTimeout(() => { t.hidden = true; }, 300); }, 2600); }
+  function toast(text) { const t = $('toast'); if (!t) return; t.textContent = text; t.classList.remove('out'); t.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { t.classList.add('out'); setTimeout(() => { if (t.classList.contains('out')) { t.hidden = true; t.classList.remove('out'); } }, 180); }, 2600); }
   function chooseInspector(id) {
     const i = Engine.byId(WORLD.inspectors, id); if (!i) return;
     WORLD.inspectorChoice = id; sheet = null; render();
@@ -241,7 +250,7 @@ const Shell = (() => {
   }
 
   /* ---------- popover menus ---------- */
-  function closePop() { if (pop) { pop.remove(); pop = null; } }
+  function closePop() { if (!pop) return; const p = pop; pop = null; p.classList.add('closing'); setTimeout(() => p.remove(), 140); }
   function openPop(btn) {
     closePop();
     const kind = btn.dataset.menu; const items = [];

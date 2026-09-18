@@ -2,7 +2,7 @@
    Kanah Buyer Mock — the UI Elements kit, namespaced, flattened.
    Source: the UI Elements folder, one Uiverse component stylesheet per subfolder, recolored to the brand on 14 Sep 2026
    and flattened on 17 Sep 2026 to the Figma screen (Kanah-Buyer-Mock-Alignment-Spec.md §4.3): no drop shadows,
-   hairlines where a shadow was, spread-only rings for focus and selection.
+   no hairline strokes since 18 Sep 2026 (fills separate the pieces), spread-only rings for focus and selection.
    Every selector starts with .kit- and every keyframe with kit- so nothing collides with the app.
    Tokens come from styles.css (:root). Sizes are adapted to the app; behaviour is the original.
    ============================================================ */
@@ -31,7 +31,7 @@
 .kit-submit.small{height:36px;padding:0 16px;font-size:14px}
 
 /* From Uiverse.io by mrhyddenn — recolored to the Kanah brand. Completion checkbox, wrapped as a task row. */
-.kit-task{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:12px 14px;border:1px solid var(--hair);border-radius:12px;background:var(--paper);position:relative;transition:background .25s var(--ease),opacity .4s var(--ease)}
+.kit-task{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:12px 14px;border:0;border-radius:12px;background:var(--paper);position:relative;transition:background .25s var(--ease),opacity .4s var(--ease)}
 .kit-task:hover{background:var(--strip)}
 .kit-task.done{opacity:.6}
 .kit-task .body{display:block;width:100%;text-align:left;border:0;background:none;padding:0;font:inherit;color:inherit;cursor:pointer}
@@ -53,13 +53,13 @@
 .kit-cbx:disabled+.kit-check{cursor:default}
 
 /* From Uiverse.io by gagan-gv — recolored to the Kanah brand. Selector; a green mark with a soft ring when chosen. */
-.kit-radio{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 14px;border:1px solid var(--hair);border-radius:12px;background:var(--paper);cursor:pointer;transition:background .3s var(--ease),border-color .3s var(--ease);position:relative}
+.kit-radio{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:12px 14px;border:0;border-radius:12px;background:var(--field);cursor:pointer;transition:background .3s var(--ease);position:relative}
 .kit-radio input{position:absolute;opacity:0;width:0;height:0}
 .kit-radio .rmark{position:relative;width:20px;height:20px;border-radius:50%;background:var(--hair);transition:all .5s;margin-top:1px;flex:0 0 20px}
 .kit-radio .rmark::after{content:"";position:absolute;display:none;left:7px;top:4px;width:4px;height:8px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
 .kit-radio input:checked~.rmark{background:var(--green);box-shadow:0 0 0 5px var(--focus)}
 .kit-radio input:checked~.rmark::after{display:block}
-.kit-radio:has(input:checked){background:var(--strip);border-color:var(--green)}
+.kit-radio:has(input:checked){background:var(--forest-wash)}
 .kit-radio input:focus-visible~.rmark{box-shadow:0 0 0 4px var(--focus)}
 .kit-radio b{display:block;font-size:14px}
 .kit-radio small{display:block;color:var(--muted);font-size:12.5px}
@@ -123,13 +123,13 @@
 @keyframes kit-circleDelete{100%{opacity:0;visibility:hidden}}
 @keyframes kit-showInstalled{100%{opacity:1;visibility:visible;right:56px}}
 
-/* From Uiverse.io by nazar-gavrylyk — recolored to the Kanah brand. Option menu on a white surface with a hairline. */
-.kit-menu{width:200px;background:var(--paper);border-radius:12px;padding:12px 0;display:flex;flex-direction:column;gap:8px;font-family:var(--font-sans);border:1px solid var(--hair)}
+/* From Uiverse.io by nazar-gavrylyk — recolored to the Kanah brand. Option menu; a field-toned surface with no stroke. */
+.kit-menu{width:200px;background:var(--field);border-radius:12px;padding:12px 0;display:flex;flex-direction:column;gap:8px;font-family:var(--font-sans);border:0}
 .kit-menu .sep{border-top:1px solid var(--hair)}
 .kit-menu ul{list-style:none;display:flex;flex-direction:column;gap:6px;padding:0 10px;margin:0}
-.kit-menu li{display:flex;align-items:center;color:var(--ink);gap:10px;transition:all .3s ease-out;padding:6px 8px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600}
-.kit-menu li svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:all .3s ease-out;flex:0 0 18px}
-.kit-menu li:hover{background:var(--strip);color:var(--green)}
+.kit-menu li{display:flex;align-items:center;color:var(--ink);gap:10px;transition:background var(--t-fast) ease,color var(--t-fast) ease;padding:6px 8px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:600}
+.kit-menu li svg{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transition:stroke var(--t-fast) ease;flex:0 0 18px}
+.kit-menu li:hover{background:var(--hair);color:var(--green)}
 .kit-menu li:hover svg{stroke:var(--green)}
 .kit-menu li:active{transform:scale(.99)}
 .kit-menu ul:last-child li{color:var(--amber)}
@@ -137,8 +137,8 @@
 .kit-menu ul:last-child li:hover{background:var(--clay-wash)}
 .kit-menu li p{margin:0}
 
-/* From Uiverse.io by Yaya12085 — recolored to the Kanah brand. Browse and upload; a hairline card, a dashed dropzone. */
-.kit-upload{width:100%;max-width:360px;border-radius:12px;border:1px solid var(--hair);display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px;gap:6px;background:var(--paper);font-family:var(--font-sans)}
+/* From Uiverse.io by Yaya12085 — recolored to the Kanah brand. Browse and upload; a flat card, a dashed dropzone. */
+.kit-upload{width:100%;max-width:360px;border-radius:12px;border:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px;gap:6px;background:var(--paper);font-family:var(--font-sans)}
 .kit-upload .header{width:100%;min-height:150px;border:2px dashed var(--ring-future);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;background:var(--strip);gap:6px;transition:background .3s var(--ease)}
 .kit-upload .header:hover{background:var(--field)}
 .kit-upload .header svg{height:52px;width:52px;stroke:var(--green);fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
