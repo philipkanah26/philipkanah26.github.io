@@ -86,5 +86,21 @@ const Engine = (() => {
     });
     return { phases, steps, next, current, terminal: !next, started: all.some(c => c.bucket !== 'todo') };
   }
-  return { keys, PHASES, idx, stage, next, prev, phaseIndex, parseHash, buildHash, current, visible, statusAt, byId, spine, stepStatus, phaseOf };
+  /* ---------- the six workstreams the buyer UI shows (alignment spec §3) ---------- */
+  function workstreamOf(stepId) { const w = SPINE.workstreams.find(w => w.steps.includes(stepId)); return w ? w.id : null; }
+  function pill(status) { return { you:'Action needed', attention:'Action needed', team:'In progress', confirmed:'Complete', todo:'Waiting' }[status] || 'Waiting'; }
+  function workstreams(cur) {
+    const sp = spine(cur);
+    const last = SPINE.workstreams[SPINE.workstreams.length - 1].id;
+    const currentId = sp.next ? workstreamOf(sp.next.step) : (sp.terminal && sp.started ? last : null);
+    return SPINE.workstreams.map(w => {
+      const steps = w.steps.map(id => sp.steps.find(s => s.id === id));
+      const sts = steps.map(s => s.status);
+      const status = sts.some(s => s === 'attention' || s === 'you') ? 'you' : sts.some(s => s === 'team') ? 'team' : sts.every(s => s === 'confirmed') ? 'confirmed' : 'todo';
+      const current = w.id === currentId;
+      const node = status === 'confirmed' ? 'done' : current ? 'current' : 'future';
+      return { id: w.id, label: w.label, steps, status, pill: pill(status), node, current, done: steps.filter(s => s.status === 'confirmed').length, total: steps.length };
+    });
+  }
+  return { keys, PHASES, idx, stage, next, prev, phaseIndex, parseHash, buildHash, current, visible, statusAt, byId, spine, stepStatus, phaseOf, workstreams, workstreamOf, pill };
 })();

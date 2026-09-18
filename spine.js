@@ -12,9 +12,18 @@
      source     where that date comes from (string or {stageKey: text})
      changes    optional amendment history [{field, old, new, reason, approver, at}]
    Steps from Deposit to Signing are gates (gate:true) and carry a control line.
+   workstreams  the six the buyer UI shows (Kanah-Buyer-Mock-Alignment-Spec.md §3); each post-offer step belongs to exactly one.
    Stage keys are listed in stages.js. Spec: Kanah-Transaction-Spine-Spec.md §3 and §7.
    ============================================================ */
 const SPINE = {
+  workstreams: [
+    { id:'offer',      label:'Offer',           steps:['offer', 'deposit'] },
+    { id:'financing',  label:'Financing',       steps:['financing', 'ctc'] },
+    { id:'inspection', label:'Inspection',      steps:['inspection'] },
+    { id:'appraisal',  label:'Appraisal',       steps:['appraisal'] },
+    { id:'insurance',  label:'Insurance',       steps:['insurance'] },
+    { id:'closing',    label:'Title & Closing', steps:['title', 'cd', 'funds', 'walkthrough', 'signing', 'keys'] }
+  ],
   phases: [
     { id:'search', label:'Search and offer', steps:['ready','home','offer'] },
     { id:'contract', label:'Under contract', steps:['deposit','inspection','appraisal','financing','insurance','title','ctc'] },
@@ -79,16 +88,16 @@ const SPINE = {
         status:{ under_contract:['confirmed','Verified Wed Oct 22 by trusted-contact call'] } },
       { id:'deposit.sent', label:'Sent', owner:'You', confirmer:'You report it', opens:'money',
         action:'View verified payment steps', detail:'Follow the verified process from Great Lakes Title. Never send funds from an emailed change.', date:'Sat Oct 25, 5:00 PM ET', source:'Purchase agreement §4 · confirmed by Maya Chen',
-        status:{ under_contract:['you','Due Sat Oct 25, 5:00 PM ET · $5,000 to Great Lakes Title'], inspection_scheduled:['confirmed','Sent Fri Oct 24 · reported by you'] } },
+        status:{ under_contract:['you','Due Sat Oct 25, 5:00 PM ET · $5,000 to Great Lakes Title'], choose_inspector:['confirmed','Sent Fri Oct 24 · reported by you'] } },
       { id:'deposit.received', label:'Received', owner:'Elena Vasquez', confirmer:'Great Lakes Title', opens:'money',
         date:'Fri Oct 24, 3:12 PM',
-        status:{ inspection_scheduled:['confirmed','Received Fri Oct 24, 3:12 PM · confirmed by Great Lakes Title'] } }
+        status:{ choose_inspector:['confirmed','Received Fri Oct 24, 3:12 PM · confirmed by Great Lakes Title'] } }
     ]},
     { id:'inspection', label:'Inspection', gate:true, screens:['B34','B37'],
       control:'Until Sun Nov 2, agreement §7, you can accept the home, ask for repairs or a credit, or withdraw with your deposit returned. After that the contingency is waived. Maya confirms the specifics.', checkpoints:[
       { id:'inspection.choose', label:'Choose inspector', owner:'You', confirmer:'You', opens:'team',
         action:'Choose an inspector', detail:'Your inspection deadline is Sun Nov 2. No order is placed until you approve scope and fee.', date:'Sun Nov 2, 11:59 PM ET', source:'Purchase agreement §7 · confirmed by Maya Chen',
-        status:{ under_contract:['you','Scope, price and availability · no order until you approve'], inspection_scheduled:['confirmed','Marcus Bell · accepted Fri Oct 24 · $495'] } },
+        status:{ choose_inspector:['you','Scope, price and availability · no order until you approve'], inspection_scheduled:['confirmed','Marcus Bell · accepted Fri Oct 24 · $495'] } },
       { id:'inspection.scheduled', label:'Scheduled', owner:'Marcus Bell, with the listing side', confirmer:'Inspector and listing side', opens:'timeline',
         status:{ inspection_scheduled:['confirmed','Tue Oct 28, 9:00 AM ET · access confirmed by the listing side'] } },
       { id:'inspection.inspected', label:'Inspected', owner:'Marcus Bell', confirmer:'Marcus Bell', opens:'timeline',
@@ -209,13 +218,13 @@ const SPINE = {
     { id:'keys', label:'Keys', gate:false, screens:['B48','B49'], checkpoints:[
       { id:'keys.funded', label:'Funded', owner:'Jordan Whitfield', confirmer:'Lakeshore Mortgage', opens:'timeline',
         action:'View closing status', detail:'Funding, recording, disbursement and possession are confirmed separately.', date:'Fri Dec 12', source:'Lender confirms funding',
-        status:{ signed:['team','Funding is with Lakeshore Mortgage · pending'], possession:['confirmed','Funded 1:20 PM'] } },
+        status:{ signed:['team','Funding is with Lakeshore Mortgage · pending'], possession:['confirmed','Funded Fri Dec 12, 1:20 PM · Lakeshore Mortgage'] } },
       { id:'keys.recorded', label:'Recorded', owner:'Elena Vasquez', confirmer:'Washtenaw County recording reference', opens:'doc/deed',
-        status:{ signed:['team','Follows funding · Washtenaw County'], possession:['confirmed','Recorded 2:15 PM · Washtenaw County'] } },
+        status:{ signed:['team','Follows funding · Washtenaw County'], possession:['confirmed','Recorded Fri Dec 12, 2:15 PM · Washtenaw County'] } },
       { id:'keys.disbursed', label:'Disbursed', owner:'Elena Vasquez', confirmer:'Great Lakes Title', opens:'timeline',
-        status:{ signed:['team','Follows recording'], possession:['confirmed','Disbursed 3:05 PM'] } },
+        status:{ signed:['team','Follows recording'], possession:['confirmed','Disbursed Fri Dec 12, 3:05 PM · Great Lakes Title'] } },
       { id:'keys.possession', label:'Possession authorized', owner:'Elena Vasquez', confirmer:'Great Lakes Title, per the agreement', opens:'doc/possession_note',
-        status:{ signed:['team','Never inferred from signing'], possession:['confirmed','Authorized for 5:00 PM'] } },
+        status:{ signed:['team','Never inferred from signing'], possession:['confirmed','Authorized for Fri Dec 12, 5:00 PM'] } },
       { id:'keys.handoff', label:'Keys handed over', owner:'Maya Chen', confirmer:'Maya Chen', opens:'home',
         action:'View key handoff', detail:'Where, when and with whom.', date:'Fri Dec 12, 5:00 PM ET', source:'Possession per agreement · confirmed by Great Lakes Title',
         status:{ possession:['team','Maya meets you at the house at 5:00 PM'], archive:['confirmed','Keys Fri Dec 12, 5:00 PM'] } }

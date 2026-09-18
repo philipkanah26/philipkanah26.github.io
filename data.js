@@ -50,6 +50,17 @@ WORLD.homes = [
     status:{ searching:'Saved', offer_drafting:'This home’s availability changed' } }
 ];
 
+/* ---------- Inspectors and availability (alignment spec §7.2). Ratings are shown as Google publishes them. ---------- */
+WORLD.inspectors = [
+  { id:'marcus', name:'Marcus Bell', org:'Bell Home Inspections', rating:'4.9', reviews:128, price:'$495', img:'assets/people/marcus.jpg', recommended:true },
+  { id:'priya', name:'Priya Raman', org:'Huron Home Inspection', rating:'4.8', reviews:96, price:'$450', initials:'PR' },
+  { id:'tom', name:'Tom Kowalski', org:'Great Lakes Inspection Co', rating:'4.9', reviews:212, price:'$520', initials:'TK' }
+];
+WORLD.slots = {
+  days: [ { day:'Mon', date:'Oct 27', slots:2 }, { day:'Tue', date:'Oct 28', slots:5, selected:true }, { day:'Wed', date:'Oct 29', slots:3 }, { day:'Thu', date:'Oct 30', slots:4 }, { day:'Fri', date:'Oct 31', slots:5 } ],
+  times: [ { t:'8:00 AM' }, { t:'9:00 AM', selected:true }, { t:'11:00 AM' }, { t:'1:00 PM' }, { t:'3:00 PM' } ]
+};
+
 /* Every image the mock uses, with its alt text. Generated in Task 8. */
 WORLD.images = {
   'assets/people/alex.jpg':'Alex Morgan, the buyer', 'assets/people/sam.jpg':'Sam Okafor, co-buyer', 'assets/people/maya.jpg':'Maya Chen, buyer’s agent, Huron Valley Realty',
@@ -60,41 +71,6 @@ WORLD.images = {
   'assets/inspection/roof-flashing.jpg':'Lifted step flashing at the chimney', 'assets/inspection/water-heater.jpg':'Tank water heater in the basement utility corner, 14 years old',
   'assets/inspection/outlet.jpg':'Outlet tester showing an open ground in the hall bathroom', 'assets/inspection/basement-crack.jpg':'Hairline vertical crack in the poured basement wall'
 };
-
-/* ---------- Tasks: the four buckets on Home. Each task mirrors one spine checkpoint (cp). ---------- */
-WORLD.tasks = [
-  { id:'prefs', cp:'home.prefs', title:'Add your search preferences', detail:'Area, price range and must-haves. Maya sees these; sellers never do.', owner:'You', due:'Whenever you’re ready', from:'home_ready', until:'searching', opens:'homes', bucket:{ home_ready:'you' } },
-  { id:'sam_invite', cp:'offer.sign', title:'Sam’s co-buyer invitation', detail:'Sam gets their own access and signs for themselves.', owner:'Sam Okafor', due:'—', from:'home_ready', until:'offer_signing', opens:'team', bucket:{ home_ready:'team', lender_request:'confirmed' } },
-  { id:'lender_wait', cp:'ready.lender', title:'Jordan is reviewing your introduction', detail:'You can keep working with Maya while you wait.', owner:'Jordan Whitfield', due:'—', from:'home_ready', until:'lender_request', opens:'team', bucket:{ home_ready:'team' } },
-  { id:'application', cp:'ready.readiness', title:'Complete your application with Lakeshore Mortgage', detail:'Opens in Lakeshore’s secure application and returns here.', owner:'You', due:'Fri Oct 10', from:'lender_request', until:'preapproved', opens:'home', bucket:{ lender_request:'you' } },
-  { id:'preapproval_task', cp:'ready.readiness', title:'Pre-approval recorded', detail:'“Pre-approved” · issued Oct 12 · expires Jan 10, 2027 · source: Lakeshore Mortgage.', owner:'Jordan Whitfield', due:'Expires Sun Jan 10, 2027', from:'preapproved', until:'under_contract', opens:'doc/preapproval', bucket:{ preapproved:'confirmed' } },
-  { id:'employment', cp:'financing.conditions', title:'Condition: employment verification before closing', detail:'Jordan will handle this in the financing channel.', owner:'Jordan Whitfield', due:'Before closing', from:'preapproved', until:'clear_to_close', opens:'messages', bucket:{ preapproved:'team' } },
-  { id:'tour_req', cp:'home.tour', title:'Ask about a tour · 1847 Willow Ridge Dr', detail:'Maya will confirm availability and any next steps.', owner:'You', due:'—', from:'searching', until:'tour_confirmed', opens:'homes/willow', bucket:{ searching:'you' } },
-  { id:'tour', cp:'home.tour', title:'Tour · 1847 Willow Ridge Dr', detail:'Fri Oct 17, 10:30 AM ET · meet Maya at the front door.', owner:'Maya Chen', due:'Fri Oct 17, 10:30 AM ET', from:'tour_confirmed', until:'offer_drafting', opens:'homes/willow', bucket:{ tour_confirmed:'team', toured:'confirmed' } },
-  { id:'reflection', cp:'home.decide', title:'Tell Maya how the home felt', detail:'Private to you and Maya.', owner:'You', due:'—', from:'toured', until:'offer_drafting', opens:'messages', bucket:{ toured:'you' } },
-  { id:'offer_terms', cp:'offer.terms', title:'Review your offer terms', detail:'Price, deposit, financing, contingencies and dates. Not sent yet.', owner:'You', due:'—', from:'offer_drafting', until:'offer_signing', opens:'offer', bucket:{ offer_drafting:'you' } },
-  { id:'sign_v1', cp:'offer.sign', title:'Sign offer v1', detail:'Each signer signs for themselves.', owner:'You and Sam', due:'Mon Oct 20', from:'offer_signing', until:'offer_submitted', opens:'offer', bucket:{ offer_signing:'you', offer_ready:'confirmed' } },
-  { id:'authorize', cp:'offer.send', title:'Authorize submission', detail:'Maya sends exactly this version to Daniel Reyes.', owner:'You', due:'Before Wed Oct 22, 5:00 PM', from:'offer_ready', until:'offer_submitted', opens:'offer', bucket:{ offer_ready:'you' } },
-  { id:'seller_resp', cp:'offer.response', title:'Seller response', detail:'Delivered and acknowledged. Response pending.', owner:'Seller’s side', due:'Offer expires Wed Oct 22, 5:00 PM ET', from:'offer_submitted', until:'counteroffer', opens:'offer', bucket:{ offer_submitted:'team' } },
-  { id:'counter', cp:'offer.response', title:'Review the seller’s counteroffer', detail:'Price $482,000 · closing Dec 12. Discuss with Maya before deciding.', owner:'You', due:'Thu Oct 23, 5:00 PM ET', from:'counteroffer', until:'under_contract', opens:'offer', bucket:{ counteroffer:'you' } },
-  { id:'earnest', cp:'deposit.sent', title:'Earnest money · $5,000', detail:'Follow the verified process from Great Lakes Title. Never send funds from an emailed change.', owner:'You', due:'Sat Oct 25, 5:00 PM ET', from:'under_contract', until:'in_diligence', opens:'money', bucket:{ under_contract:'you', inspection_scheduled:'confirmed' } },
-  { id:'inspector', cp:'inspection.choose', title:'Choose an inspector', detail:'Scope, price and availability. No order until you approve.', owner:'You', due:'Inspection period ends Sun Nov 2', from:'under_contract', until:'inspection_scheduled', opens:'team', bucket:{ under_contract:'you' } },
-  { id:'title_order', cp:'title.commitment', title:'Title order accepted', detail:'Elena Vasquez is running the search.', owner:'Elena Vasquez', due:'Commitment target Mon Nov 24', from:'under_contract', until:'clear_to_close', opens:'team', bucket:{ under_contract:'team', inspection_scheduled:'team' } },
-  { id:'inspection', cp:'inspection.scheduled', title:'Inspection · Marcus Bell', detail:'Tue Oct 28, 9:00 AM ET. Access confirmed by the listing side.', owner:'Marcus Bell', due:'Tue Oct 28, 9:00 AM ET', from:'inspection_scheduled', until:'inspection_report', opens:'timeline', bucket:{ inspection_scheduled:'confirmed' } },
-  { id:'report', cp:'inspection.decide', title:'Review the inspection report with Maya', detail:'Four findings. The original report first; the summary is sourced.', owner:'You', due:'Inspection period ends Sun Nov 2', from:'inspection_report', until:'in_diligence', opens:'doc/inspection_report', bucket:{ inspection_report:'you' } },
-  { id:'appraisal', cp:'appraisal.scheduled', title:'Appraisal ordered by your lender', detail:'Lakeshore Mortgage’s process. Maya coordinates access only.', owner:'Jordan Whitfield', due:'—', from:'inspection_report', until:'clear_to_close', opens:'team', bucket:{ inspection_report:'team', in_diligence:'team' } },
-  { id:'loan_choice', cp:'financing.lock', title:'Compare your Loan Estimate and confirm with Jordan', detail:'30-year fixed, 6.125%. You are not locked to any lender until you choose.', owner:'You', due:'Lock by Mon Nov 10', from:'in_diligence', until:'clear_to_close', opens:'doc/loan_estimate', bucket:{ in_diligence:'you' } },
-  { id:'insurance', cp:'insurance.bound', title:'Arrange homeowners insurance', detail:'Nora’s quote is in. Confirm coverage and effective date with your lender.', owner:'You', due:'Bind by Mon Dec 1', from:'in_diligence', until:'clear_to_close', opens:'doc/insurance_binder', bucket:{ in_diligence:'you' } },
-  { id:'cd', cp:'cd.received', title:'Review your Closing Disclosure', detail:'Delivered and received Dec 8. Waiting period ends Dec 11. Lender record is authoritative.', owner:'You', due:'Before Fri Dec 12', from:'clear_to_close', until:'closing_scheduled', opens:'doc/closing_disclosure', bucket:{ clear_to_close:'you' } },
-  { id:'ctc', cp:'ctc.confirm', title:'Clear to close', detail:'Lender and title confirmed readiness Dec 4.', owner:'Jordan Whitfield', due:'—', from:'clear_to_close', until:'signed', opens:'timeline', bucket:{ clear_to_close:'confirmed' } },
-  { id:'funds', cp:'funds.sent', title:'Prepare your closing funds · $96,812.18', detail:'Confirm instructions with Elena using the number you already have. Any change restarts verification.', owner:'You', due:'Thu Dec 11', from:'closing_scheduled', until:'signed', opens:'money', bucket:{ closing_scheduled:'you' } },
-  { id:'walk', cp:'walkthrough.completed', title:'Final walkthrough', detail:'Thu Dec 11, 4:00 PM ET with Maya. Check condition and the credit items.', owner:'You', due:'Thu Dec 11, 4:00 PM ET', from:'closing_scheduled', until:'signed', opens:'doc/walkthrough', bucket:{ closing_scheduled:'you' } },
-  { id:'closing_appt', cp:'signing.appointment', title:'Closing appointment', detail:'Fri Dec 12, 9:00 AM ET · Great Lakes Title · bring government ID.', owner:'Elena Vasquez', due:'Fri Dec 12, 9:00 AM ET', from:'closing_scheduled', until:'signed', opens:'timeline', bucket:{ closing_scheduled:'confirmed' } },
-  { id:'funding', cp:'keys.funded', title:'Funding', detail:'Lakeshore Mortgage confirms funding after signing.', owner:'Jordan Whitfield', due:'Fri Dec 12', from:'signed', until:'possession', opens:'timeline', bucket:{ signed:'team' } },
-  { id:'recording', cp:'keys.recorded', title:'Recording and disbursement', detail:'Elena confirms each step separately.', owner:'Elena Vasquez', due:'Fri Dec 12', from:'signed', until:'possession', opens:'timeline', bucket:{ signed:'team' } },
-  { id:'keys', cp:'keys.handoff', title:'Key handoff', detail:'Fri Dec 12, 5:00 PM ET at the house with Maya.', owner:'Maya Chen', due:'Fri Dec 12, 5:00 PM ET', from:'possession', until:'archive', opens:'home', bucket:{ possession:'team' } },
-  { id:'warranty_task', title:'Optional: home warranty', detail:'Your choice. Not a closing requirement.', owner:'You', due:'—', from:'archive', opens:'doc/warranty', bucket:{ archive:'you' } }
-];
 
 
 /* ---------- Messages: three scoped threads ---------- */
@@ -147,6 +123,44 @@ WORLD.ask = [
   { id:'q_archive', q:'Where are my documents after closing?', from:'possession', cites:['deed','signed_package'], a:'In Documents, permanently. Your recorded deed, the signed closing package, the settlement statement, inspection report and everything else stay available to you and Sam. Your team stays reachable from Team.' },
   { id:'q_earnest', q:'What happens to my earnest money?', from:'under_contract', cites:['earnest_instructions','executed_agreement'], a:'Great Lakes Title holds it. At closing it is credited toward your cash to close. If the purchase ended under a contingency you kept, it would be returned per the agreement; the agreement (§4 and §7) governs, and Maya or Elena can explain the specifics.' }
 ];
+/* ---------- Ask Kanah chips per stage (alignment spec §8): a question with an answer, or an action.
+   act: doc/<id> opens a document · go/<view> navigates · sheet/inspectors opens the inspector sheet · toast/<text> shows a toast. ---------- */
+WORLD.ask.push(
+  { id:'q_od_period', q:'What does the inspection period mean?', from:'offer_drafting', cites:['offer_v1'], a:'Ten days after acceptance to inspect and decide. You can accept, ask for repairs or a credit, or withdraw with your deposit returned. Maya confirms the dates once the agreement is executed.' },
+  { id:'q_od_why', q:'Why $478,000?', from:'offer_drafting', cites:[], act:'go/messages/maya' },
+  { id:'q_od_earnest', q:'What is earnest money?', from:'offer_drafting', cites:['offer_v1'], a:'A $5,000 deposit held by the title company that shows you are serious. It is credited to your cash to close.' },
+  { id:'q_os_signing', q:'What am I signing?', from:'offer_signing', cites:['offer_v1','preapproval','lead_paint'], a:'Purchase agreement offer v1, your pre-approval letter and the lead-based paint disclosure. Each one opens from the surface.' },
+  { id:'q_os_sam', q:'Can Sam sign later?', from:'offer_signing', cites:['offer_v1'], a:'Yes. Sam signs for himself after you; nothing is sent until both signatures are in.' },
+  { id:'q_os_terms', q:'Show me the terms', from:'offer_signing', cites:[], act:'go/offer' },
+  { id:'q_or_receives', q:'What exactly does the seller’s side receive?', from:'offer_ready', cites:['offer_v1'], a:'Offer v1, the pre-approval letter and the lead paint acknowledgment, sent by Maya to Daniel Reyes. Nothing else.' },
+  { id:'q_or_change', q:'Can I change something after sending?', from:'offer_ready', cites:['offer_v1'], a:'Only as a new version. Maya sends v2; the seller’s side sees each version as its own offer.' },
+  { id:'q_sub_expire', q:'When does my offer expire?', from:'offer_submitted', cites:['offer_v1'], a:'Wed Oct 22 at 5:00 PM ET, per offer v1 §12.' },
+  { id:'q_sub_counter', q:'What if they counter?', from:'offer_submitted', cites:['offer_v1'], a:'Maya brings the counter here as v2 with every changed term marked. You accept, counter or decline.' },
+  { id:'q_co_why', q:'Why does Maya recommend accepting?', from:'counteroffer', cites:[], act:'go/messages/maya' },
+  { id:'q_co_after', q:'What happens after I sign?', from:'counteroffer', cites:['offer_v2'], a:'Maya returns the signed counter. When the seller’s side confirms execution you are under contract and your $5,000 deposit is due within three days.' },
+  { id:'q_uc_real', q:'How do I know the payment steps are real?', from:'under_contract', cites:['earnest_instructions'], a:'They were verified Oct 22 by a call to the Great Lakes Title number on file. Kanah never shows account numbers. If anything changes, stop and call Elena.' },
+  { id:'q_uc_steps', q:'Show me the verified steps', from:'under_contract', cites:[], act:'doc/earnest_instructions' },
+  { id:'q_ci_time', q:'Find a different time', from:'choose_inspector', cites:[], act:'toast/Pick any open slot below. More times appear when Marcus updates his calendar.' },
+  { id:'q_ci_others', q:'Show me other inspectors', from:'choose_inspector', cites:[], act:'sheet/inspectors' },
+  { id:'q_ci_after', q:'What happens after the inspection?', from:'choose_inspector', cites:['executed_agreement'], a:'Marcus sends the report within 24 hours. You have until Sun Nov 2 to accept, ask for repairs or a credit, or withdraw.' },
+  { id:'q_is_check', q:'What does the inspector check?', from:'inspection_scheduled', cites:['inspection_scope'], a:'Structure, roof, exterior, attic, electrical, plumbing, heating and cooling, interior, basement and garage. Radon, pest and sewer scope are available on request.' },
+  { id:'q_is_there', q:'Should I be there?', from:'inspection_scheduled', cites:['inspection_scope'], a:'You are welcome to. Maya is on site for the whole inspection and can walk you through anything.' },
+  { id:'q_is_resched', q:'Reschedule', from:'inspection_scheduled', cites:[], act:'toast/Reschedule goes to Marcus and the listing side (mock).' },
+  { id:'q_ir_ask', q:'What can I ask the seller for?', from:'inspection_report', cites:['inspection_report'], a:'Repairs before closing, a credit at closing, or a price change. Maya drafts it as a request and the seller responds either way.' },
+  { id:'q_ir_open', q:'Open the report', from:'inspection_report', cites:[], act:'doc/inspection_report' },
+  { id:'q_id_lock', q:'Should I lock now?', from:'in_diligence', cites:['loan_estimate'], a:'Locking fixes 6.125% through closing. Jordan can explain the trade-off; nothing locks until you say so.' },
+  { id:'q_id_nora', q:'What does Nora’s quote cover?', from:'in_diligence', cites:['insurance_binder'], a:'Dwelling $420,000, other structures $42,000, personal property $210,000, liability $300,000, with a $1,500 deductible.' },
+  { id:'q_cc_cash', q:'Why is cash to close $96,812.18?', from:'clear_to_close', cites:['closing_disclosure'], a:'Sale price less your loan, plus closing costs, less your deposit and the seller credit. Every row is on the Closing Disclosure.' },
+  { id:'q_cc_open', q:'Open the Closing Disclosure', from:'clear_to_close', cites:[], act:'doc/closing_disclosure' },
+  { id:'q_cs_bring', q:'What do I bring to closing?', from:'closing_scheduled', cites:['closing_funds'], a:'Government ID and your wire confirmation. Fri Dec 12, 9:00 AM ET at Great Lakes Title, 2723 S State St.' },
+  { id:'q_cs_walk', q:'Open the walkthrough checklist', from:'closing_scheduled', cites:[], act:'doc/walkthrough' },
+  { id:'q_sg_keys', q:'When do I get the keys?', from:'signed', cites:['signed_package'], a:'When possession is authorized, after funding, recording and disbursement. Maya hands them over.' },
+  { id:'q_sg_settle', q:'Where’s my settlement statement?', from:'signed', cites:[], act:'doc/settlement_statement' },
+  { id:'q_po_deed', q:'Open the deed', from:'possession', cites:[], act:'doc/deed' },
+  { id:'q_po_warranty', q:'What about a home warranty?', from:'possession', cites:['possession_note'], a:'Optional, and yours to choose. Maya can point you to what sellers in Ann Arbor usually offer.' },
+  { id:'q_ar_who', q:'Who helped me buy?', from:'archive', cites:[], act:'go/people' },
+  { id:'q_ar_deed', q:'Open the deed', from:'archive', cites:[], act:'doc/deed' }
+);
 
 /* ---------- Documents ---------- */
 WORLD.documents = [
